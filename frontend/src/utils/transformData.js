@@ -1,10 +1,10 @@
 const LINE_COLORS = [
-  '#2563eb',
-  '#dc2626',
-  '#16a34a',
+  '#3b82f6',
+  '#10b981',
+  '#d946ef',
   '#f59e0b',
   '#8b5cf6',
-  '#ec4899',
+  '#06b6d4',
 ];
 
 export const toChartData = (apiData, selectedCurrencies) => {
@@ -22,7 +22,7 @@ export const toChartData = (apiData, selectedCurrencies) => {
       label: `${base}/${currency}`,
       data: apiData.map(entry => entry.rates[currency] ?? null),
       borderColor: LINE_COLORS[colorIdx % LINE_COLORS.length],
-      tension: 0.1,
+      tension: 0.3,
     });
     colorIdx++;
 
@@ -34,7 +34,7 @@ export const toChartData = (apiData, selectedCurrencies) => {
         return rate ? 1 / rate : null;
       }),
       borderColor: LINE_COLORS[colorIdx % LINE_COLORS.length],
-      tension: 0.1,
+      tension: 0.3,
     });
     colorIdx++;
   }

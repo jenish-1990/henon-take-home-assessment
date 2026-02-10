@@ -7,6 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import './RateChart.css';
@@ -18,29 +19,87 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
+
+const crosshairPlugin = {
+  id: 'crosshair',
+  afterDraw: (chart) => {
+    if (chart.tooltip?._active?.length) {
+      const { ctx } = chart;
+      const x = chart.tooltip._active[0].element.x;
+      const topY = chart.scales.y.top;
+      const bottomY = chart.scales.y.bottom;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, topY);
+      ctx.lineTo(x, bottomY);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+      ctx.stroke();
+      ctx.restore();
+    }
+  },
+};
 
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: { position: 'top' },
-    title: {
-      display: true,
-      text: 'Exchange Rates',
+    legend: { display: false },
+    title: { display: false },
+    tooltip: {
+      backgroundColor: '#1e293b',
+      titleColor: '#f1f5f9',
+      bodyColor: '#cbd5e1',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 1,
+      padding: { top: 10, bottom: 10, left: 14, right: 14 },
+      cornerRadius: 8,
+      titleFont: { weight: 600, family: 'DM Sans', size: 13 },
+      bodyFont: { family: 'DM Sans', size: 12 },
+      boxPadding: 6,
+      titleMarginBottom: 6,
+      callbacks: {
+        title: (items) => {
+          const label = items[0]?.label;
+          if (!label) return '';
+          const [y, m, d] = label.split('-');
+          return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric',
+          });
+        },
+      },
     },
   },
   scales: {
     x: {
-      title: { display: true, text: 'Date' },
+      ticks: {
+        color: '#64748b',
+        font: { size: 11, family: 'DM Sans' },
+        maxRotation: 0,
+        callback: function(value) {
+          const label = this.getLabelForValue(value);
+          if (!label) return '';
+          const [y, m, d] = label.split('-');
+          return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric',
+          });
+        },
+      },
+      grid: { color: 'rgba(255, 255, 255, 0.04)' },
+      border: { color: 'rgba(255, 255, 255, 0.06)' },
     },
     y: {
-      title: { display: true, text: 'Rate' },
+      ticks: { color: '#64748b', font: { size: 11, family: 'DM Sans' } },
+      grid: { color: 'rgba(255, 255, 255, 0.04)' },
+      border: { display: false },
     },
   },
   elements: {
-    line: { tension: 0.1 },
+    line: { tension: 0.3, borderWidth: 2 },
+    point: { radius: 0, hoverRadius: 5, hoverBorderWidth: 2, backgroundColor: '#1e293b' },
   },
   interaction: {
     mode: 'index',
@@ -51,24 +110,24 @@ const chartOptions = {
 const RateChart = ({ data, loading }) => {
   if (loading) {
     return (
-      <div className="rate-chart-container rate-chart-loading">
+      <div className="chart-wrap loading-state">
         <span className="spinner" />
-        Loading chart...
+        <span className="loading-text">Loading chart...</span>
       </div>
     );
   }
 
   if (!data || !data.datasets?.length) {
     return (
-      <div className="rate-chart-container rate-chart-empty">
+      <div className="chart-wrap empty-state">
         No data available
       </div>
     );
   }
 
   return (
-    <div className="rate-chart-container">
-      <Line data={data} options={chartOptions} />
+    <div className="chart-wrap">
+      <Line data={data} options={chartOptions} plugins={[crosshairPlugin]} />
     </div>
   );
 };

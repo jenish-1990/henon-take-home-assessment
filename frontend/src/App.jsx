@@ -3,7 +3,7 @@ import './App.css';
 
 const App = () => {
   return (
-    <div className="app">
+    <div className="app-shell">
       <Dashboard />
     </div>
   );

@@ -57,7 +57,7 @@ describe('toChartData', () => {
   it('sets tension on all datasets', () => {
     const result = toChartData(MOCK_DATA, ['USD', 'CAD']);
     result.datasets.forEach(ds => {
-      expect(ds.tension).toBe(0.1);
+      expect(ds.tension).toBe(0.3);
     });
   });
 

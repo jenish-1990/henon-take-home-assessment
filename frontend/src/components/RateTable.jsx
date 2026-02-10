@@ -27,16 +27,32 @@ const getSavedState = () => {
   }
 };
 
+const dateFormatter = (params) => {
+  if (!params.value) return '';
+  const [y, m, d] = params.value.split('-');
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+  });
+};
+
 const rateFormatter = (params) => {
   return params.value != null ? params.value.toFixed(6) : '';
 };
 
+const rateColumn = (field, headerName) => ({
+  field,
+  headerName,
+  filter: 'agNumberColumnFilter',
+  valueFormatter: rateFormatter,
+  cellStyle: { fontWeight: 600 },
+});
+
 const columnDefs = [
-  { field: 'date', headerName: 'Date', filter: 'agTextColumnFilter', pinned: 'left' },
-  { field: 'EUR_USD', headerName: 'EUR/USD', filter: 'agNumberColumnFilter', valueFormatter: rateFormatter },
-  { field: 'EUR_CAD', headerName: 'EUR/CAD', filter: 'agNumberColumnFilter', valueFormatter: rateFormatter },
-  { field: 'USD_EUR', headerName: 'USD/EUR', filter: 'agNumberColumnFilter', valueFormatter: rateFormatter },
-  { field: 'CAD_EUR', headerName: 'CAD/EUR', filter: 'agNumberColumnFilter', valueFormatter: rateFormatter },
+  { field: 'date', headerName: 'Date', filter: 'agTextColumnFilter', pinned: 'left', valueFormatter: dateFormatter },
+  rateColumn('EUR_USD', 'EUR/USD'),
+  rateColumn('EUR_CAD', 'EUR/CAD'),
+  rateColumn('USD_EUR', 'USD/EUR'),
+  rateColumn('CAD_EUR', 'CAD/EUR'),
 ];
 
 const defaultColDef = {
@@ -51,22 +67,25 @@ const RateTable = ({ rowData, loading }) => {
   const initialState = useMemo(() => getSavedState(), []);
 
   const onStateUpdated = useCallback((event) => {
-    localStorage.setItem(GRID_STATE_KEY, JSON.stringify(event.state));
+    const { columnSizing, ...rest } = event.state.columnState || {};
+    const cleaned = { ...event.state, columnState: rest };
+    localStorage.setItem(GRID_STATE_KEY, JSON.stringify(cleaned));
   }, []);
 
   if (loading) {
     return (
-      <div className="rate-table-container rate-table-loading">
+      <div className="table-wrap loading-state">
         <span className="spinner" />
-        Loading table...
+        <span className="loading-text">Loading rates...</span>
       </div>
     );
   }
 
   return (
-    <div className="rate-table-container">
-      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+    <div className="table-wrap">
+      <div className="ag-theme-alpine-dark ag-dark-custom grid-container">
         <AgGridReact
+          theme="legacy"
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}

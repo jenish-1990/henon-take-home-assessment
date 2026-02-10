@@ -1,0 +1,143 @@
+.ag-theme-alpine-dark.ag-dark-custom {
+  --ag-background-color: transparent;
+  --ag-header-background-color: rgba(255, 255, 255, 0.04);
+  --ag-odd-row-background-color: rgba(255, 255, 255, 0.02);
+  --ag-row-hover-color: rgba(59, 130, 246, 0.08);
+  --ag-foreground-color: #f1f5f9;
+  --ag-data-color: #f1f5f9;
+  --ag-secondary-foreground-color: #94a3b8;
+  --ag-header-foreground-color: #94a3b8;
+  --ag-border-color: rgba(255, 255, 255, 0.06);
+  --ag-secondary-border-color: rgba(255, 255, 255, 0.06);
+  --ag-row-border-color: rgba(255, 255, 255, 0.06);
+  --ag-font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --ag-font-size: 14px;
+  --ag-header-font-size: 13px;
+  --ag-header-font-weight: 600;
+  --ag-borders: none;
+  --ag-borders-critical: none;
+  --ag-wrapper-border-radius: 0;
+  --ag-cell-horizontal-padding: 16px;
+  --ag-header-height: 44px;
+  --ag-row-height: 44px;
+  --ag-selected-row-background-color: rgba(59, 130, 246, 0.12);
+  --ag-range-selection-border-color: #3b82f6;
+  --ag-cell-horizontal-border: none;
+  --ag-column-border: none;
+  --ag-header-column-separator-display: none;
+  --ag-header-column-resize-handle-display: none;
+  --ag-icon-size: 14px;
+  --ag-input-focus-border-color: #3b82f6;
+  --ag-checkbox-checked-color: #3b82f6;
+  --ag-input-border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom,
+.ag-theme-alpine-dark.ag-dark-custom .ag-root-wrapper {
+  background-color: transparent;
+  border: none;
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-body-viewport,
+.ag-theme-alpine-dark.ag-dark-custom .ag-center-cols-viewport,
+.ag-theme-alpine-dark.ag-dark-custom .ag-center-cols-container {
+  background-color: transparent;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-header {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-header-cell {
+  color: #94a3b8;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-header-cell-label {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-header-cell:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-cell {
+  font-feature-settings: "tnum" on, "lnum" on;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-pinned-left-header,
+.ag-theme-alpine-dark.ag-dark-custom .ag-pinned-left-cols-container {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-popup-child {
+  background-color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-filter {
+  background-color: #1e293b;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-picker-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-text-field-input,
+.ag-theme-alpine-dark.ag-dark-custom .ag-number-field-input {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-text-field-input:focus,
+.ag-theme-alpine-dark.ag-dark-custom .ag-number-field-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-icon {
+  color: #94a3b8;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-row-selected {
+  background-color: rgba(59, 130, 246, 0.12);
+}
+
+.ag-theme-alpine-dark.ag-dark-custom .ag-horizontal-left-spacer,
+.ag-theme-alpine-dark.ag-dark-custom .ag-horizontal-right-spacer {
+  border: none;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.ag-theme-alpine-dark.ag-dark-custom ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
