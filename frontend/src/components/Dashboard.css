@@ -7,6 +7,19 @@
   gap: 28px;
 }
 
+.dash-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  transition: opacity 350ms ease, filter 350ms ease;
+}
+
+.dash-loading {
+  opacity: 0.45;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
 @media (max-width: 768px) {
   .dash-outer {
     padding: 32px 20px 48px;
@@ -21,6 +34,18 @@
   margin-bottom: 4px;
 }
 
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-logo {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+}
+
 .dash-title {
   font-size: 1.75rem;
   font-weight: 700;
@@ -32,7 +57,7 @@
 .dash-subtitle {
   font-size: 0.875rem;
   color: #64748b;
-  margin-top: 4px;
+  margin-top: 1px;
 }
 
 .dash-error {
@@ -96,9 +121,33 @@
   letter-spacing: -0.01em;
 }
 
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .card-meta {
   font-size: 0.75rem;
   color: #64748b;
+}
+
+.clear-filter-btn {
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 6px;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  background-color: rgba(244, 63, 94, 0.08);
+  color: #fb7185;
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+.clear-filter-btn:hover {
+  background-color: rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.45);
 }
 
 .card-body {

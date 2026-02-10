@@ -46,6 +46,10 @@ const crosshairPlugin = {
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  animation: { duration: 600, easing: 'easeInOutQuart' },
+  transitions: {
+    active: { animation: { duration: 200 } },
+  },
   plugins: {
     legend: { display: false },
     title: { display: false },
@@ -57,8 +61,11 @@ const chartOptions = {
       borderWidth: 1,
       padding: { top: 10, bottom: 10, left: 14, right: 14 },
       cornerRadius: 8,
-      titleFont: { weight: 600, family: 'DM Sans', size: 13 },
-      bodyFont: { family: 'DM Sans', size: 12 },
+      titleFont: { weight: 600, family: 'DM Sans', size: 14 },
+      bodyFont: { family: 'DM Sans', size: 13 },
+      boxWidth: 8,
+      boxHeight: 8,
+      usePointStyle: true,
       boxPadding: 6,
       titleMarginBottom: 6,
       callbacks: {

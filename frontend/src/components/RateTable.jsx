@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
@@ -50,8 +50,8 @@ const rateColumn = (field, headerName) => ({
 const columnDefs = [
   { field: 'date', headerName: 'Date', filter: 'agTextColumnFilter', pinned: 'left', valueFormatter: dateFormatter },
   rateColumn('EUR_USD', 'EUR/USD'),
-  rateColumn('EUR_CAD', 'EUR/CAD'),
   rateColumn('USD_EUR', 'USD/EUR'),
+  rateColumn('EUR_CAD', 'EUR/CAD'),
   rateColumn('CAD_EUR', 'CAD/EUR'),
 ];
 
@@ -63,7 +63,9 @@ const defaultColDef = {
   resizable: true,
 };
 
-const RateTable = ({ rowData, loading }) => {
+const RateTable = ({ rowData, loading, gridRef, onFilterChange }) => {
+  const localRef = useRef(null);
+  const ref = gridRef || localRef;
   const initialState = useMemo(() => getSavedState(), []);
 
   const onStateUpdated = useCallback((event) => {
@@ -71,6 +73,18 @@ const RateTable = ({ rowData, loading }) => {
     const cleaned = { ...event.state, columnState: rest };
     localStorage.setItem(GRID_STATE_KEY, JSON.stringify(cleaned));
   }, []);
+
+  const onFilterChanged = useCallback(() => {
+    if (!onFilterChange) return;
+    const model = ref.current?.api?.getFilterModel();
+    onFilterChange(model && Object.keys(model).length > 0);
+  }, [onFilterChange, ref]);
+
+  useEffect(() => {
+    if (!onFilterChange) return;
+    const model = ref.current?.api?.getFilterModel();
+    onFilterChange(model && Object.keys(model).length > 0);
+  }, [rowData]);
 
   if (loading) {
     return (
@@ -85,12 +99,14 @@ const RateTable = ({ rowData, loading }) => {
     <div className="table-wrap">
       <div className="ag-theme-alpine-dark ag-dark-custom grid-container">
         <AgGridReact
+          ref={ref}
           theme="legacy"
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           initialState={initialState}
           onStateUpdated={onStateUpdated}
+          onFilterChanged={onFilterChanged}
         />
       </div>
     </div>

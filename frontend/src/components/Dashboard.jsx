@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import useExchangeRates from '../hooks/useExchangeRates';
 import { toChartData, toGridRows } from '../utils/transformData';
 import RateChart from './RateChart';
@@ -31,6 +31,8 @@ const CURRENCY_OPTIONS = [
   { key: 'CAD_EUR', label: 'CAD/EUR', color: '#f59e0b' },
 ];
 
+const ALL_CURRENCY_KEYS = ['EUR_USD', 'USD_EUR', 'EUR_CAD', 'CAD_EUR'];
+
 const getSavedRange = () => {
   try {
     const saved = localStorage.getItem('dateRange');
@@ -40,11 +42,25 @@ const getSavedRange = () => {
   }
 };
 
+const getSavedCurrencies = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('selectedCurrencies'));
+    if (Array.isArray(saved) && saved.every((k) => ALL_CURRENCY_KEYS.includes(k))) {
+      return saved;
+    }
+  } catch { /* ignore */ }
+  return ALL_CURRENCY_KEYS;
+};
+
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState(getSavedRange);
-  const [selectedCurrencies, setSelectedCurrencies] = useState([
-    'EUR_USD', 'EUR_CAD', 'USD_EUR', 'CAD_EUR',
-  ]);
+  const [selectedCurrencies, setSelectedCurrencies] = useState(getSavedCurrencies);
+  const [hasFilters, setHasFilters] = useState(false);
+  const gridRef = useRef(null);
+
+  const clearFilters = useCallback(() => {
+    gridRef.current?.api?.setFilterModel(null);
+  }, []);
 
   const endDate = formatDate(new Date());
   const startDate = getStartDate(dateRange);
@@ -97,17 +113,22 @@ const Dashboard = () => {
   };
 
   const handleCurrencyToggle = (key) => {
-    setSelectedCurrencies((prev) =>
-      prev.includes(key) ? prev.filter((c) => c !== key) : [...prev, key]
-    );
+    setSelectedCurrencies((prev) => {
+      const next = prev.includes(key) ? prev.filter((c) => c !== key) : [...prev, key];
+      localStorage.setItem('selectedCurrencies', JSON.stringify(next));
+      return next;
+    });
   };
 
   return (
     <div className="dash-outer">
       <div className="dash-header">
-        <div>
-          <h1 className="dash-title">Currency Dashboard</h1>
-          <p className="dash-subtitle">Track exchange rates in real time</p>
+        <div className="dash-brand">
+          <img src="/logo.svg" alt="" className="dash-logo" />
+          <div>
+            <h1 className="dash-title">Currency Dashboard</h1>
+            <p className="dash-subtitle">Track exchange rates in real time</p>
+          </div>
         </div>
         <div className="range-group">
           {DATE_RANGES.map(({ label, value }) => (
@@ -144,38 +165,52 @@ const Dashboard = () => {
         })}
       </div>
 
-      {stats && !loading && (
-        <div className="stat-grid">
-          {stats.map(({ key, label, rate, change }, i) => (
-            <div key={key} className="stat-card" style={{ animationDelay: `${i * 0.05}s` }}>
-              <span className="stat-label">{label}</span>
-              <span className="stat-value">{rate.toFixed(4)}</span>
-              <span className={`stat-change ${change >= 0 ? 'positive' : 'negative'}`}>
-                {change >= 0 ? '↑' : '↓'} {Math.abs(change).toFixed(2)}%
-              </span>
+      <div className={`dash-content ${loading ? 'dash-loading' : ''}`}>
+        {stats && (
+          <div className="stat-grid">
+            {stats.map(({ key, label, rate, change }, i) => (
+              <div key={key} className="stat-card" style={{ animationDelay: `${i * 0.05}s` }}>
+                <span className="stat-label">{label}</span>
+                <span className="stat-value">{rate.toFixed(4)}</span>
+                <span className={`stat-change ${change >= 0 ? 'positive' : 'negative'}`}>
+                  {change >= 0 ? '↑' : '↓'} {Math.abs(change).toFixed(2)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="dash-card">
+          <div className="card-header">
+            <h2 className="card-heading">Exchange Rates</h2>
+          </div>
+          <div className="card-body">
+            <RateChart data={chartData} loading={loading} />
+          </div>
+        </div>
+
+        <div className="dash-card" style={{ animationDelay: '0.1s' }}>
+          <div className="card-header">
+            <h2 className="card-heading">Historical Data</h2>
+            <div className="card-header-actions">
+              {hasFilters && (
+                <button className="clear-filter-btn" onClick={clearFilters}>
+                  Clear Filters
+                </button>
+              )}
+              {gridRows.length > 0 && (
+                <span className="card-meta">{gridRows.length} data points</span>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-
-      <div className="dash-card">
-        <div className="card-header">
-          <h2 className="card-heading">Exchange Rates</h2>
-        </div>
-        <div className="card-body">
-          <RateChart data={chartData} loading={loading} />
-        </div>
-      </div>
-
-      <div className="dash-card" style={{ animationDelay: '0.1s' }}>
-        <div className="card-header">
-          <h2 className="card-heading">Historical Data</h2>
-          {gridRows.length > 0 && (
-            <span className="card-meta">{gridRows.length} data points</span>
-          )}
-        </div>
-        <div className="card-body card-body-table">
-          <RateTable rowData={gridRows} loading={loading} />
+          </div>
+          <div className="card-body card-body-table">
+            <RateTable
+              rowData={gridRows}
+              loading={loading}
+              gridRef={gridRef}
+              onFilterChange={setHasFilters}
+            />
+          </div>
         </div>
       </div>
     </div>
