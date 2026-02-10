@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,13 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5d3bpx(biqo@+(w&mw++0wrv&9=34kq3vv!2uqt6_v*md1%!va'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-5d3bpx(biqo@+(w&mw++0wrv&9=34kq3vv!2uqt6_v*md1%!va',
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,7 +121,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Serve the Vite build output at the root URL so /assets/... paths work
+WHITENOISE_ROOT = BASE_DIR.parent / 'frontend' / 'dist'
+
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

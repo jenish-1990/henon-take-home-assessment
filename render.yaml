@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: henon-dashboard
+    runtime: python
+    buildCommand: ./build.sh
+    startCommand: cd backend && gunicorn config.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: henon-dashboard.onrender.com
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: NODE_VERSION
+        value: "20"

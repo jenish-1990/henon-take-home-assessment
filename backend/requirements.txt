@@ -8,3 +8,5 @@ idna==3.11
 requests==2.32.5
 sqlparse==0.5.5
 urllib3==2.6.3
+gunicorn==23.0.0
+whitenoise==6.9.0
