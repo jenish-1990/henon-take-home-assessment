@@ -7,7 +7,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import './RateChart.css';
@@ -19,8 +18,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
-  Filler
+  Legend
 );
 
 const crosshairPlugin = {
